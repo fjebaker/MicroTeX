@@ -45,7 +45,7 @@ pub fn build(b: *std.Build) !void {
     lib.addConfigHeader(conf_header);
 
     lib.addIncludePath(b.path("lib"));
-    lib.defineCMacro("GLYPH_RENDER_TYPE", glyph_render_type);
+    lib.root_module.addCMacro("GLYPH_RENDER_TYPE", glyph_render_type);
     lib.addCSourceFiles(.{
         .root = b.path("lib"),
         .files = SOURCE_FILES,
@@ -62,7 +62,7 @@ pub fn build(b: *std.Build) !void {
         .files = CWRAPPER_FILES,
         .flags = COMPILE_FLAGS,
     });
-    lib.defineCMacro("HAVE_CWRAPPER", null);
+    lib.root_module.addCMacro("HAVE_CWRAPPER", "");
     inline for (CWRAPPER_INCLUDE) |path| {
         lib.installHeader(b.path("lib/" ++ path), path);
     }
