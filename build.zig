@@ -32,10 +32,13 @@ pub fn build(b: *std.Build) !void {
         "microtexconfig.h",
     );
 
-    const lib = b.addStaticLibrary(.{
+    const lib = b.addLibrary(.{
         .name = "microtex",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     // also install the configuration header into the include directory
@@ -72,8 +75,10 @@ pub fn build(b: *std.Build) !void {
     // optionally link to the memcheck executable to ensure all symbols are defined
     const exe = b.addExecutable(.{
         .name = "memcheck",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     exe.linkLibrary(lib);
